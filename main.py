@@ -167,7 +167,7 @@ class BusinessApp:
                 bg=self.colors["surface"],
                 fg=self.colors["text_light"]).pack()
 
-    # ENTER BUSINESS PAGE
+
      # ENTER BUSINESS PAGE
     def show_enter_page(self):
         self.clear_content()
@@ -519,6 +519,7 @@ class BusinessApp:
         self.submit_btn.config(state="normal", text="✅ Submit Business")
 
     # EXPLORE PAGE 
+    # EXPLORE PAGE (Enhanced with similar improvements)
     def show_explore_page(self):
         self.clear_content()
         
@@ -564,9 +565,9 @@ class BusinessApp:
                 bg=self.colors["surface"]).grid(row=0, column=0, padx=(0, 5))
         
         category_filter = ttk.Combobox(filter_frame, 
-                                      values=["All", "Food", "Retail", "Services", "Entertainment", "Other"],
-                                      width=15,
-                                      state="readonly")
+                                    values=["All", "Food", "Retail", "Services", "Entertainment", "Other"],
+                                    width=15,
+                                    state="readonly")
         category_filter.set("All")
         category_filter.grid(row=0, column=1, padx=(0, 20))
         
@@ -576,9 +577,9 @@ class BusinessApp:
                 bg=self.colors["surface"]).grid(row=0, column=2, padx=(0, 5))
         
         distance_filter = ttk.Combobox(filter_frame, 
-                                      values=["All", "5", "10", "15"],
-                                      width=10,
-                                      state="readonly")
+                                    values=["All", "5", "10", "15"],
+                                    width=10,
+                                    state="readonly")
         distance_filter.set("All")
         distance_filter.grid(row=0, column=3)
         
@@ -594,12 +595,12 @@ class BusinessApp:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
         self.business_listbox = tk.Listbox(list_frame, 
-                                          yscrollcommand=scrollbar.set,
-                                          font=self.fonts["body"],
-                                          bg="white",
-                                          selectbackground=self.colors["secondary"],
-                                          selectforeground="white",
-                                          height=15)
+                                        yscrollcommand=scrollbar.set,
+                                        font=self.fonts["body"],
+                                        bg="white",
+                                        selectbackground=self.colors["secondary"],
+                                        selectforeground="white",
+                                        height=15)
         self.business_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.config(command=self.business_listbox.yview)
         
@@ -629,9 +630,9 @@ class BusinessApp:
                 
                 # Add icons based on category
                 icon = "🍽️" if b["category"] == "Food" else \
-                       "🛍️" if b["category"] == "Retail" else \
-                       "🔧" if b["category"] == "Services" else \
-                       "🎭" if b["category"] == "Entertainment" else "🏢"
+                    "🛍️" if b["category"] == "Retail" else \
+                    "🔧" if b["category"] == "Services" else \
+                    "🎭" if b["category"] == "Entertainment" else "🏢"
                 
                 has_image = " 📷" if b.get("image_path") and os.path.exists(b.get("image_path")) else ""
                 
@@ -654,7 +655,7 @@ class BusinessApp:
         
         view_btn = tk.Button(action_frame, 
                             text="👁️ View Details", 
-                            command=lambda: self.view_business_details(),
+                            command=self.view_business_details,  # Fixed: removed lambda
                             font=self.fonts["button"],
                             bg=self.colors["secondary"],
                             fg="white",
@@ -664,14 +665,14 @@ class BusinessApp:
         view_btn.pack(side="left", padx=(0, 10))
         
         refresh_btn = tk.Button(action_frame, 
-                               text="🔄 Refresh List", 
-                               command=refresh_list,
-                               font=self.fonts["button"],
-                               bg=self.colors["text_light"],
-                               fg="white",
-                               padx=20,
-                               pady=8,
-                               cursor="hand2")
+                            text="🔄 Refresh List", 
+                            command=refresh_list,
+                            font=self.fonts["button"],
+                            bg=self.colors["text_light"],
+                            fg="white",
+                            padx=20,
+                            pady=8,
+                            cursor="hand2")
         refresh_btn.pack(side="left", padx=(0, 10))
         
         back_btn = tk.Button(action_frame, 
@@ -687,7 +688,7 @@ class BusinessApp:
         
         # Double-click to view details
         self.business_listbox.bind('<Double-Button-1>', lambda e: self.view_business_details())
-    
+
     def view_business_details(self):
         """View details of selected business"""
         selection = self.business_listbox.curselection()
@@ -723,7 +724,7 @@ class BusinessApp:
         details_window.transient(self.root)
         details_window.grab_set()
         
-        # Header
+
         header = tk.Frame(details_window, bg=self.colors["primary"], height=60)
         header.pack(fill="x")
         header.pack_propagate(False)
@@ -734,12 +735,41 @@ class BusinessApp:
                 bg=self.colors["primary"],
                 fg="white").pack(pady=15)
         
-        # Content
-        content = tk.Frame(details_window, bg=self.colors["background"], padx=30, pady=20)
-        content.pack(fill="both", expand=True)
+        #     Create a main frame to hold the canvas and scrollbar
+        main_container = tk.Frame(details_window, bg=self.colors["background"])
+        main_container.pack(fill="both", expand=True)
         
+        #     Create Canvas and Scrollbar
+        content_canvas = tk.Canvas(main_container, bg=self.colors["background"], highlightthickness=0)
+        content_scrollbar = ttk.Scrollbar(main_container, orient="vertical", command=content_canvas.yview)
+        
+        #     This is the inner frame that will hold all scrollable content
+        scrollable_content_frame = tk.Frame(content_canvas, bg=self.colors["background"], padx=30, pady=20)
+        
+        #     Configure canvas scrolling
+        scrollable_content_frame.bind(
+            "<Configure>",
+            lambda e: content_canvas.configure(scrollregion=content_canvas.bbox("all"))
+        )
+        content_canvas.create_window((0, 0), window=scrollable_content_frame, anchor="nw")
+        content_canvas.configure(yscrollcommand=content_scrollbar.set)
+        
+        #     Pack canvas and scrollbar
+        content_canvas.pack(side="left", fill="both", expand=True)
+        content_scrollbar.pack(side="right", fill="y")
+        
+        #     Bind mouse wheel for easier scrolling
+        def _on_mousewheel(event):
+            content_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        content_canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        #     Make sure to unbind when window closes to prevent errors
+        def _cleanup_bind():
+            content_canvas.unbind_all("<MouseWheel>")
+        details_window.protocol("WM_DELETE_WINDOW", lambda: [details_window.destroy(), _cleanup_bind()])
+        
+        #     All main content now goes into 'scrollable_content_frame'
         # Business info card
-        info_card = self.create_card(content)
+        info_card = self.create_card(scrollable_content_frame) # PARENT CHANGED
         info_card.pack(fill="x", pady=(0, 20))
         
         # Category icon
@@ -808,7 +838,7 @@ class BusinessApp:
                         fg=self.colors["text_light"]).pack()
         
         # Reviews section
-        reviews_card = self.create_card(content)
+        reviews_card = self.create_card(scrollable_content_frame) # PARENT CHANGED
         reviews_card.pack(fill="x", pady=(0, 20))
         
         tk.Label(reviews_card, 
@@ -849,9 +879,9 @@ class BusinessApp:
                     bg=self.colors["surface"],
                     fg=self.colors["text_light"]).pack(pady=10)
         
-        # Add review section
-        add_review_frame = self.create_card(content)
-        add_review_frame.pack(fill="x")
+        # Add review section (still inside scrollable area for input fields)
+        add_review_frame = self.create_card(scrollable_content_frame) # PARENT CHANGED
+        add_review_frame.pack(fill="x", pady=(0, 20))
         
         tk.Label(add_review_frame, 
                 text="Add Your Review", 
@@ -888,6 +918,11 @@ class BusinessApp:
                               font=self.fonts["body"])
         review_text.pack(fill="x", pady=(0, 10))
         
+    
+        #     Create a separate frame for buttons at the bottom of the window
+        button_container = tk.Frame(details_window, bg=self.colors["background"], padx=30, pady=20)
+        button_container.pack(fill="x", side="bottom")
+        
         def save_review():
             all_businesses = load_businesses()
             all_businesses[actual_index]["reviews"].append({
@@ -896,10 +931,12 @@ class BusinessApp:
             })
             save_businesses(all_businesses)
             messagebox.showinfo("Success", "Thank you for your review!")
+            # Clean up mouse wheel binding before closing
+            content_canvas.unbind_all("<MouseWheel>")
             details_window.destroy()
             self.show_explore_page()  # Refresh explore page
         
-        button_frame = tk.Frame(add_review_frame, bg=self.colors["surface"])
+        button_frame = tk.Frame(button_container, bg=self.colors["background"])
         button_frame.pack(pady=10)
         
         tk.Button(button_frame, 
@@ -913,7 +950,7 @@ class BusinessApp:
         
         tk.Button(button_frame, 
                  text="Close", 
-                 command=details_window.destroy,
+                 command=lambda: [content_canvas.unbind_all("<MouseWheel>"), details_window.destroy()],
                  font=self.fonts["button"],
                  bg=self.colors["text_light"],
                  fg="white",

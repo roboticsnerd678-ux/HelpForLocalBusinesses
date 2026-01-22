@@ -48,5 +48,25 @@
         "text": "A bit pricey but good quality."
       }
     ]
+  },
+  {
+    "name": "dsgagds",
+    "address": "sdgsdg",
+    "category": "Services",
+    "description": "sdfsdf",
+    "contact": "54",
+    "distance": 4.0,
+    "image_path": "",
+    "reviews": []
+  },
+  {
+    "name": "dfsfsdfsdaf",
+    "address": "adsfsdfs",
+    "category": "Entertainment",
+    "description": "dsfsdfsd",
+    "contact": "",
+    "distance": 5.0,
+    "image_path": "",
+    "reviews": []
   }
 ]
