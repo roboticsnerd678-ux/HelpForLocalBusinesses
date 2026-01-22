@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Taco Haven",
+    "address": "456 Taco Lane, Phoenix, AZ",
+    "category": "Food",
+    "description": "Best tacos in town with homemade salsa.",
+    "contact": "602-111-2222",
+    "distance": 3.5,
+    "reviews": [
+      {
+        "rating": 5,
+        "text": "Amazing tacos!"
+      },
+      {
+        "rating": 4,
+        "text": "Great service, a bit busy."
+      }
+    ]
+  },
+  {
+    "name": "Desert Bloom Spa",
+    "address": "789 Relaxation Rd, Phoenix, AZ",
+    "category": "Services",
+    "description": "Full-service spa for ultimate relaxation.",
+    "contact": "602-333-4444",
+    "distance": 7.2,
+    "reviews": [
+      {
+        "rating": 5,
+        "text": "Very relaxing experience."
+      }
+    ]
+  },
+  {
+    "name": "Arizona Outfitters",
+    "address": "321 Adventure Way, Phoenix, AZ",
+    "category": "Retail",
+    "description": "Outdoor gear and clothing for all seasons.",
+    "contact": "602-555-6666",
+    "distance": 12.8,
+    "reviews": [
+      {
+        "rating": 4,
+        "text": "Great selection of hiking gear."
+      },
+      {
+        "rating": 3,
+        "text": "A bit pricey but good quality."
+      }
+    ]
+  },
+  {
+    "name": "Michael",
+    "address": "Michael",
+    "category": "Retail",
+    "description": "Michael",
+    "contact": "9999",
+    "distance": 6.0,
+    "reviews": []
+  },
+  {
+    "name": "Michaels robot",
+    "address": "PV",
+    "category": "Services",
+    "description": "Build robots",
+    "contact": "345794879",
+    "distance": 2.0,
+    "image_path": "Photos\\be528b5a.png",
+    "reviews": []
+  },
+  {
+    "name": "Michael Moffa",
+    "address": "home",
+    "category": "Retail",
+    "description": "michael",
+    "contact": "303004040",
+    "distance": 14.0,
+    "image_path": "business_images\\d8bccd77.png",
+    "reviews": [
+      {
+        "rating": 2,
+        "text": "Horrible"
+      }
+    ]
+  },
+  {
+    "name": "test",
+    "address": "testing",
+    "category": "Services",
+    "description": "test",
+    "contact": "5555",
+    "distance": 5.0,
+    "image_path": "Photos\\7a225d34.png",
+    "reviews": [
+      {
+        "rating": 5,
+        "text": "Hello, awesome"
+      }
+    ]
+  }
+]
