@@ -32,11 +32,11 @@ class BusinessApp:
         self.root.title("Phoenix Local Business Directory")
         self.root.geometry("900x700")
         
-        # ========== UX IMPROVEMENT #3: Consistent Styles ==========
+        # Consistent Styles
         self.setup_styles()
         self.root.configure(bg=self.colors["background"])
         
-        # ========== UX IMPROVEMENT #1: Better Visual Hierarchy ==========
+        # Better Visual Hierarchy 
         # Create header that persists across pages
         self.header_frame = tk.Frame(self.root, bg=self.colors["primary"], height=80)
         self.header_frame.pack(fill="x", side="top")
@@ -60,17 +60,17 @@ class BusinessApp:
         self.content_frame = tk.Frame(self.root, bg=self.colors["background"], padx=30, pady=20)
         self.content_frame.pack(fill="both", expand=True)
         
-        # ========== UX IMPROVEMENT #5: Loading State Setup ==========
+        # Loading State Setup 
         self.is_loading = False
         
-        # ========== Keyboard Shortcuts (Bonus Accessibility) ==========
+        # Keyboard Shortcuts (Bonus Accessibility)
         self.root.bind('<Escape>', lambda e: self.show_start_page())
         
         # Start Page
         self.show_start_page()
     
     def setup_styles(self):
-        """UX Improvement #3: Define consistent styles"""
+        """Define consistent colors and fonts"""
         self.colors = {
             "primary": "#2C3E50",      # Dark blue
             "secondary": "#3498DB",     # Medium blue
@@ -112,7 +112,7 @@ class BusinessApp:
         return card
     
     def show_start_page(self):
-        """UX Improvement #1: Better Visual Hierarchy"""
+        
         self.clear_content()
         
         # Welcome card
@@ -168,12 +168,13 @@ class BusinessApp:
                 fg=self.colors["text_light"]).pack()
 
     # ENTER BUSINESS PAGE
+     # ENTER BUSINESS PAGE
     def show_enter_page(self):
         self.clear_content()
         
-        # Page header
+        # Page header (STAYS FIXED AT TOP - NO SCROLLING)
         header_card = self.create_card(self.content_frame)
-        header_card.pack(fill="x", pady=(0, 20))
+        header_card.pack(fill="x", pady=(0, 10)) # Reduced pady slightly
         
         tk.Label(header_card, 
                 text="Add a Local Business", 
@@ -187,12 +188,40 @@ class BusinessApp:
                 bg=self.colors["surface"],
                 fg=self.colors["text_light"]).pack(anchor="w", pady=(0, 10))
         
-        # ========== UX IMPROVEMENT #2: Grouped Form Fields ==========
-        form_card = self.create_card(self.content_frame)
-        form_card.pack(fill="x", pady=(0, 20))
+      
+        #   Main container card for the scrollable area
+        form_container_card = self.create_card(self.content_frame)
+        form_container_card.pack(fill="both", expand=True, pady=(0, 10)) # Fills available space
         
+        #   Create a Canvas and a vertical Scrollbar
+        form_canvas = tk.Canvas(form_container_card, bg=self.colors["surface"], highlightthickness=0)
+        form_scrollbar = ttk.Scrollbar(form_container_card, orient="vertical", command=form_canvas.yview)
+        
+        #   This is the inner frame that holds ALL the form widgets and will scroll
+        form_scrollable_frame = tk.Frame(form_canvas, bg=self.colors["surface"])
+        
+        #   Configure the canvas scrolling region
+        form_scrollable_frame.bind(
+            "<Configure>",
+            lambda e: form_canvas.configure(scrollregion=form_canvas.bbox("all"))
+        )
+        #   Put the scrollable frame inside the canvas
+        form_canvas.create_window((0, 0), window=form_scrollable_frame, anchor="nw")
+        form_canvas.configure(yscrollcommand=form_scrollbar.set)
+        
+        #   Pack the canvas and scrollbar
+        form_canvas.pack(side="left", fill="both", expand=True)
+        form_scrollbar.pack(side="right", fill="y")
+        
+        #   Bind mouse wheel for easier scrolling (Windows/Mac/Linux compatible)
+        def _on_mousewheel(event):
+            form_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        form_canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        
+    
+        #  Grouped Form Fields
         # Business Info Group
-        business_frame = tk.LabelFrame(form_card, 
+        business_frame = tk.LabelFrame(form_scrollable_frame, # PARENT CHANGED
                                       text=" Business Information ", 
                                       font=self.fonts["label"],
                                       bg=self.colors["surface"],
@@ -246,7 +275,7 @@ class BusinessApp:
         self.entries["description"] = desc_entry
         
         # Contact Info Group
-        contact_frame = tk.LabelFrame(form_card, 
+        contact_frame = tk.LabelFrame(form_scrollable_frame, # PARENT CHANGED
                                      text=" Contact Details ", 
                                      font=self.fonts["label"],
                                      bg=self.colors["surface"],
@@ -272,14 +301,14 @@ class BusinessApp:
         self.entries["distance"] = distance_entry
         
         # Image Upload Section
-        image_frame = tk.LabelFrame(form_card, 
+        image_frame = tk.LabelFrame(form_scrollable_frame, # PARENT CHANGED
                                    text=" Business Image ", 
                                    font=self.fonts["label"],
                                    bg=self.colors["surface"],
                                    fg=self.colors["primary"],
                                    padx=15,
                                    pady=15)
-        image_frame.pack(fill="x")
+        image_frame.pack(fill="x", pady=(0, 20)) # Added bottom padding
         
         self.image_path_var = tk.StringVar()
         
@@ -312,11 +341,16 @@ class BusinessApp:
                 fg=self.colors["text_light"],
                 wraplength=300).pack(side="left")
         
-        # Action buttons
-        button_frame = tk.Frame(form_card, bg=self.colors["surface"])
-        button_frame.pack(pady=20)
         
-        # ========== UX IMPROVEMENT #4: Clear Error States ==========
+        #   Create a new card for buttons that stays outside the scrollable container
+        button_card = self.create_card(self.content_frame)
+        button_card.pack(fill="x", pady=(0, 10))
+        
+        button_frame = tk.Frame(button_card, bg=self.colors["surface"])
+        button_frame.pack(pady=10)
+        
+      
+        #   Error label now lives in the fixed button area
         self.error_label = tk.Label(button_frame, 
                                    text="", 
                                    font=self.fonts["label"],
@@ -324,7 +358,7 @@ class BusinessApp:
                                    fg=self.colors["error"])
         self.error_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
         
-        # ========== UX IMPROVEMENT #5: Loading State Button ==========
+        #Loading State Button 
         self.submit_btn = tk.Button(button_frame, 
                                    text="✅ Submit Business", 
                                    command=self.submit_business,
@@ -353,8 +387,8 @@ class BusinessApp:
         # Initial field validation setup
         for entry in [name_entry, address_entry, distance_entry]:
             entry.bind('<KeyRelease>', lambda e: self.validate_field(e.widget))
-    
-    # ========== UX IMPROVEMENT #4: Clear Error States ==========
+
+    #Clear Error States
     def validate_field(self, widget):
         """Validate individual field and update UI"""
         field_name = ""
@@ -399,7 +433,7 @@ class BusinessApp:
     
     def submit_business(self):
         """Handle business submission with loading state"""
-        # ========== UX IMPROVEMENT #5: Loading State ==========
+        #Loading State 
         if self.is_loading:
             return
             
@@ -476,7 +510,7 @@ class BusinessApp:
             self.root.after(1000, self.show_start_page)
             
         finally:
-            # ========== UX IMPROVEMENT #5: Reset Loading State ==========
+            # Reset Loading State
             self.root.after(500, self.reset_loading_state)
     
     def reset_loading_state(self):
@@ -484,7 +518,7 @@ class BusinessApp:
         self.is_loading = False
         self.submit_btn.config(state="normal", text="✅ Submit Business")
 
-    # EXPLORE PAGE (Enhanced with similar improvements)
+    # EXPLORE PAGE 
     def show_explore_page(self):
         self.clear_content()
         
