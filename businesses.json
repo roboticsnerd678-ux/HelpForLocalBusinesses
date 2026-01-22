@@ -48,54 +48,5 @@
         "text": "A bit pricey but good quality."
       }
     ]
-  },
-  {
-    "name": "Michael",
-    "address": "Michael",
-    "category": "Retail",
-    "description": "Michael",
-    "contact": "9999",
-    "distance": 6.0,
-    "reviews": []
-  },
-  {
-    "name": "Michaels robot",
-    "address": "PV",
-    "category": "Services",
-    "description": "Build robots",
-    "contact": "345794879",
-    "distance": 2.0,
-    "image_path": "Photos\\be528b5a.png",
-    "reviews": []
-  },
-  {
-    "name": "Michael Moffa",
-    "address": "home",
-    "category": "Retail",
-    "description": "michael",
-    "contact": "303004040",
-    "distance": 14.0,
-    "image_path": "business_images\\d8bccd77.png",
-    "reviews": [
-      {
-        "rating": 2,
-        "text": "Horrible"
-      }
-    ]
-  },
-  {
-    "name": "test",
-    "address": "testing",
-    "category": "Services",
-    "description": "test",
-    "contact": "5555",
-    "distance": 5.0,
-    "image_path": "Photos\\7a225d34.png",
-    "reviews": [
-      {
-        "rating": 5,
-        "text": "Hello, awesome"
-      }
-    ]
   }
 ]
